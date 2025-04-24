@@ -3,6 +3,7 @@ import { format, subDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Panel } from './StyledComponents/Panel';
 
 interface EventData {
   date: string;
@@ -16,11 +17,8 @@ interface AnalyticsDashboardProps {
   apiKey: string;
 }
 
-const DashboardContainer = styled.div`
-  padding: 2rem;
-  background: ${({ theme }) => theme.colors.background.primary};
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+const DashboardContainer = styled(Panel)`
+  
 `;
 
 const FilterContainer = styled.div`
@@ -92,7 +90,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ siteId, 
   };
 
   return (
-    <DashboardContainer>
+    <DashboardContainer padding="large">
       <FilterContainer>
         <DateInput
           type="date"

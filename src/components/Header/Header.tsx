@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import styled from 'styled-components';
-import logo from '../../assets/logo.svg?react';
+import logo from '../../assets/images/balanced-logo.png';
 
 const StyledHeader = styled.header`
+margin: 50px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.xl}`};
   background-color: ${({ theme }) => theme.colors.background.primary};
 `;
 
@@ -15,12 +15,10 @@ const Logo = styled(Link)`
   align-items: center;
 `;
 
-const StyledLogo = styled(logo)`
-  height: 32px;
-  width: auto;
-  path {
-    fill: ${({ theme }) => theme.colors.text.primary};
-  }
+const StyledLogo = styled.img`
+  width: 100px;
+  height: 75px;
+  object-fit: contain;
 `;
 
 const Nav = styled.nav`
@@ -45,15 +43,13 @@ export const Header = () => {
   return (
     <StyledHeader>
       <Logo to="/">
-        <StyledLogo />
+        <StyledLogo src={logo} alt="Chain Stats Logo" />
       </Logo>
       
       <Nav>
         <NavLink to="/how-to">How-to</NavLink>
         <NavLink to="/demo">Demo</NavLink>
         <NavLink to="/stats" $isActive>Stats</NavLink>
-        <NavLink to="/blog">Blog</NavLink>
-        <NavLink to="/forum">Forum</NavLink>
       </Nav>
     </StyledHeader>
   );

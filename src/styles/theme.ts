@@ -17,12 +17,11 @@ export const theme = {
     error: '#FF3B30',
   },
   spacing: {
-    xs: '4px',
-    sm: '8px',
-    md: '16px',
-    lg: '24px',
-    xl: '32px',
-    xxl: '48px',
+    xs: '5px',
+    sm: '10px',
+    md: '25px',
+    lg: '35px',
+    xl: '50px',
   },
   typography: {
     fontFamily: "'TeX Gyre Adventor', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",

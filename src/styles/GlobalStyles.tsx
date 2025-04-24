@@ -41,7 +41,6 @@ export const GlobalStyles = createGlobalStyle`
 
   main {
     max-width: 1280px;
-    min-height: 100vh;
     margin-left: auto;
     margin-right: auto;
     padding-left: 40px;
