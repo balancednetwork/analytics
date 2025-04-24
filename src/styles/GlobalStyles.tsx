@@ -55,7 +55,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    margin-top: ${theme.spacing.xxl};
+    margin-top: ${theme.spacing.xl};
+    margin-bottom: ${theme.spacing.xl};
     font-size: ${theme.typography.fontSize.h1};
   }
 

@@ -24,15 +24,15 @@ const StyledLogo = styled.img`
 const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xl};
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 const NavLink = styled(Link)<{ $isActive?: boolean }>`
-  color: ${({ theme, $isActive }) => 
-    $isActive ? theme.colors.text.primary : theme.colors.text.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.typography.fontSize.medium};
   transition: color ${({ theme }) => theme.transitions.fast};
   padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+  font-weight: 600;
   
   &:hover {
     color: ${({ theme }) => theme.colors.text.primary};
