@@ -1,4 +1,5 @@
 export const theme = {
+  _brand: 'styled-components-theme' as const,
   colors: {
     // Main colors
     primary: '#0c2a4d', // Teal accent color used in buttons and highlights
@@ -26,18 +27,14 @@ export const theme = {
   typography: {
     fontFamily: "'TeX Gyre Adventor', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
     fontSize: {
-      xs: '12px',
       small: '14px',
       medium: '16px',
-      large: '20px',
-      xl: '24px',
-      xxl: '32px',
-      huge: '48px',
+      h3: '20px',
+      h2: '25px',
+      h1: '60px',
     },
     fontWeight: {
       regular: 400,
-      medium: 500,
-      semibold: 600,
       bold: 700,
     },
     lineHeight: {

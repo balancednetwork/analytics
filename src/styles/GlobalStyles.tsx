@@ -39,6 +39,15 @@ export const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
+  main {
+    max-width: 1280px;
+    min-height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: ${theme.typography.lineHeight.tight};
@@ -47,15 +56,16 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    font-size: ${theme.typography.fontSize.huge};
+    margin-top: ${theme.spacing.xxl};
+    font-size: ${theme.typography.fontSize.h1};
   }
 
   h2 {
-    font-size: ${theme.typography.fontSize.xxl};
+    font-size: ${theme.typography.fontSize.h2};
   }
 
   h3 {
-    font-size: ${theme.typography.fontSize.xl};
+    font-size: ${theme.typography.fontSize.h3};
   }
 
   p {
@@ -81,34 +91,5 @@ export const GlobalStyles = createGlobalStyle`
     font-size: inherit;
     color: inherit;
     transition: all ${theme.transitions.normal};
-  }
-
-  /* Card styles */
-  .card {
-    background-color: ${theme.colors.background.secondary};
-    border-radius: ${theme.borderRadius.lg};
-    padding: ${theme.spacing.xl};
-    box-shadow: ${theme.shadows.card};
-  }
-
-  /* Stats number styles */
-  .stat-number {
-    font-size: ${theme.typography.fontSize.xl};
-    font-weight: 700;
-    color: ${theme.colors.text.primary};
-  }
-
-  .stat-label {
-    font-size: ${theme.typography.fontSize.small};
-    color: ${theme.colors.text.secondary};
-    margin-top: ${theme.spacing.xs};
-  }
-
-  /* Chart container styles */
-  .chart-container {
-    background-color: ${theme.colors.background.secondary};
-    border-radius: ${theme.borderRadius.lg};
-    padding: ${theme.spacing.xl};
-    margin: ${theme.spacing.lg} 0;
   }
 `; 
