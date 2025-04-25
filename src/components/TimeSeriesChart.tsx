@@ -53,7 +53,7 @@ interface TimeSeriesChartProps {
 }
 
 const commonChartProps = {
-  margin: { top: 20, right: 40, left: 40, bottom: 20 }
+  margin: { top: 20, right: 40, left: 0, bottom: 20 }
 };
 
 const commonAxisProps = {
@@ -88,7 +88,7 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
   return (
     <ChartContainer>
-      <h3 style={{ marginBottom: '40px', fontSize: '16px' }}>{title}</h3>
+      <h3 style={{ marginBottom: '40px', fontSize: '16px', textAlign: 'center' }}>{title}</h3>
       <ResponsiveContainer width="100%" height="100%">
         <ChartComponent data={data}  {...commonChartProps}>
         <defs>

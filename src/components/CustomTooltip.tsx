@@ -11,8 +11,7 @@ const TooltipContainer = styled.div`
 
 const TooltipDate = styled.div`
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 7);
-  margin-bottom: 2px;
+  color: rgba(255, 255, 255, 0.7);
 `;
 
 const TooltipValue = styled.div`
@@ -31,7 +30,7 @@ export const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, 
         {payload[0].payload.date}
       </TooltipDate>
       <TooltipValue>
-        Transactions: {payload[0].value}
+        Transactions: <strong>{payload[0].value}</strong>
       </TooltipValue>
     </TooltipContainer>
   );
