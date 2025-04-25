@@ -41,6 +41,12 @@ const StatCard = styled.div`
   border-radius: 8px;
   text-align: center;
 
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.text.secondary};
+  }
+
   p {
     margin: 0;
     font-size: 1.5rem;
@@ -68,17 +74,26 @@ const LoadingOverlay = styled.div`
 `;
 const AVAILABLE_NETWORKS = ['Arbitrum', 'Archway', 'Avalanche', 'Base', 'BNB Chain', 'Havah', 'ICON', 'Injective', 'Optimism', 'Polygon', 'Solana', 'Stellar', 'Sui'];
 
+type FilterType = 'from' | 'to' | 'either';
+
+const FILTER_LABELS: Record<FilterType, string> = {
+  from: 'as origin',
+  to: 'as destination',
+  either: 'as origin or destination'
+};
+
 export const AnalyticsDashboard: React.FC = () => {
   const [startDate, setStartDate] = useState(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [selectedNetwork, setSelectedNetwork] = useState('Stellar');
-  const [filterType, setFilterType] = useState<'from' | 'to'>('to');
+  const [filterType, setFilterType] = useState<FilterType>('to');
 
   const statsOptions: UsePlausibleStatsOptions = useMemo(() => ({
     date_range: [startDate, endDate],
     filters: {
       eventName: 'swap_standard',
-      [filterType]: selectedNetwork
+      network: selectedNetwork,
+      filterType
     }
   }), [selectedNetwork, filterType, startDate, endDate]);
 
@@ -113,10 +128,11 @@ export const AnalyticsDashboard: React.FC = () => {
         </Select>
         <Select
           value={filterType}
-          onChange={(e) => setFilterType(e.target.value as 'from' | 'to')}
+          onChange={(e) => setFilterType(e.target.value as FilterType)}
         >
-          <option value="to">as destination</option>
-          <option value="from">as origin</option>
+          {(Object.entries(FILTER_LABELS) as [FilterType, string][]).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
         </Select>
       </FilterContainer>
 
@@ -125,7 +141,7 @@ export const AnalyticsDashboard: React.FC = () => {
       ) : (
         <StatsContainer>
           <StatCard>
-            <h3>Swaps {filterType === 'to' ? 'to' : 'from'} {selectedNetwork}</h3>
+            <h3>Swaps {FILTER_LABELS[filterType]} {selectedNetwork}</h3>
             <p>{metricValue ?? 0}</p>
           </StatCard>
         </StatsContainer>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type {  PlausibleFilter } from '../types/plausible';
+import type { PlausibleFilter } from '../types/plausible';
 
 const PLAUSIBLE_API_BASE = 'https://plausible.io/api/v2/query';
 
@@ -11,10 +11,12 @@ const plausibleApi = axios.create({
   }
 });
 
+type NetworkFilterType = 'from' | 'to' | 'either';
+
 interface EventFilterOptions {
   eventName: string;
-  from?: string;
-  to?: string;
+  network?: string;
+  filterType?: NetworkFilterType;
 }
 
 export const fetchPlausibleStats = async (
@@ -38,14 +40,18 @@ export const fetchPlausibleStats = async (
       // Add event name filter
       queryParams.filters.push(['is', 'event:name', [filters.eventName]]);
 
-      // Add 'from' network filter if provided
-      if (filters.from) {
-        queryParams.filters.push(['is', 'event:props:from', [filters.from]]);
-      }
-
-      // Add 'to' network filter if provided
-      if (filters.to) {
-        queryParams.filters.push(['is', 'event:props:to', [filters.to]]);
+      // Add network filters based on filterType
+      if (filters.network) {
+        if (filters.filterType === 'from') {
+          queryParams.filters.push(['is', 'event:props:from', [filters.network]]);
+        } else if (filters.filterType === 'to') {
+          queryParams.filters.push(['is', 'event:props:to', [filters.network]]);
+        } else if (filters.filterType === 'either') {
+          queryParams.filters.push(['or', [
+            ['is', 'event:props:from', [filters.network]],
+            ['is', 'event:props:to', [filters.network]]
+          ]]);
+        }
       }
     }
 
