@@ -41,6 +41,15 @@ const ChartsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @media (min-width: 1200px) {
+    flex-direction: row;
+    
+    > * {
+      flex: 1;
+      min-width: 0; // Prevents flex items from overflowing
+    }
+  }
 `;
 
 const AVAILABLE_NETWORKS = ['Arbitrum', 'Archway', 'Avalanche', 'Base', 'BNB Chain', 'Havah', 'ICON', 'Injective', 'Optimism', 'Polygon', 'Solana', 'Stellar', 'Sui'];
