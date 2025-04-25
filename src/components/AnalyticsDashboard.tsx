@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
 import { format, subDays } from 'date-fns';
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import { Panel } from './StyledComponents/Panel';
 import { usePlausibleStats } from '../hooks/usePlausibleStats';
+import { usePlausibleTimeSeries } from '../hooks/usePlausibleTimeSeries';
+import { useCumulativeData } from '../hooks/useCumulativeData';
 import type { UsePlausibleStatsOptions } from '../hooks/usePlausibleStats';
-import { extractMetricValue } from '../utils/plausible';
+import { TimeSeriesChart } from './TimeSeriesChart';
 
 const DashboardContainer = styled(Panel)``;
 
@@ -28,27 +29,6 @@ const DateInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.background.secondary};
 `;
 
-const StatsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-`;
-
-const StatCard = styled.div`
-  background: ${({ theme }) => theme.colors.background.secondary};
-  padding: 1rem;
-  border-radius: 8px;
-  text-align: center;
-
-  p {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.text.primary};
-  }
-`;
-
 const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.error};
   padding: 1rem;
@@ -57,15 +37,12 @@ const ErrorMessage = styled.div`
   border-radius: 8px;
 `;
 
-const LoadingOverlay = styled.div`
+const ChartsContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  background: ${({ theme }) => theme.colors.background.secondary};
-  border-radius: 8px;
-  color: ${({ theme }) => theme.colors.text.secondary};
+  flex-direction: column;
+  gap: 2rem;
 `;
+
 const AVAILABLE_NETWORKS = ['Arbitrum', 'Archway', 'Avalanche', 'Base', 'BNB Chain', 'Havah', 'ICON', 'Injective', 'Optimism', 'Polygon', 'Solana', 'Stellar', 'Sui'];
 
 const EVENT_TYPES = [
@@ -92,7 +69,7 @@ const FILTER_LABELS: Record<FilterType, string> = {
 };
 
 export const AnalyticsDashboard: React.FC = () => {
-  const [startDate, setStartDate] = useState(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState(format(subDays(new Date(), 7), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [selectedNetwork, setSelectedNetwork] = useState('Stellar');
   const [filterType, setFilterType] = useState<FilterType>('either');
@@ -107,13 +84,15 @@ export const AnalyticsDashboard: React.FC = () => {
     }
   }), [selectedNetwork, filterType, startDate, endDate, selectedEvent]);
 
-  const { data: stats, isLoading, error, isError } = usePlausibleStats(statsOptions);
+  const { error: statsError, isError: isStatsError } = usePlausibleStats(statsOptions);
+  const { data: timeSeriesData, isLoading: isTimeSeriesLoading, error: timeSeriesError, isError: isTimeSeriesError } = usePlausibleTimeSeries(statsOptions);
+  const cumulativeData = useCumulativeData(timeSeriesData || []);
 
-  if (isError && error instanceof Error) {
-    return <ErrorMessage>Error loading stats: {error.message}</ErrorMessage>;
+  if (isStatsError && statsError instanceof Error) {
+    return <ErrorMessage>Error loading stats: {statsError.message}</ErrorMessage>;
   }
 
-  const metricValue = extractMetricValue(stats);
+  const chartTitle = `${selectedEvent.replace(/_/g, ' ')} ${FILTER_LABELS[filterType]} on ${selectedNetwork}`;
 
   return (
     <DashboardContainer padding="large">
@@ -156,18 +135,25 @@ export const AnalyticsDashboard: React.FC = () => {
         </Select>
       </FilterContainer>
 
-      {isLoading ? (
-        <LoadingOverlay>Loading stats...</LoadingOverlay>
-      ) : (
-        <StatsContainer>
-          <StatCard>
-            <h3>{selectedEvent.replace(/_/g, ' ')} {FILTER_LABELS[filterType]} on {selectedNetwork}</h3>
-            <p>{metricValue ?? 0}</p>
-          </StatCard>
-        </StatsContainer>
-      )}
+      <ChartsContainer>
+        <TimeSeriesChart
+          data={timeSeriesData}
+          isLoading={isTimeSeriesLoading}
+          isError={isTimeSeriesError}
+          error={timeSeriesError}
+          title={`Daily ${chartTitle}`}
+          type="bar"
+        />
 
-      {/* Chart component commented out for now */}
+        <TimeSeriesChart
+          data={cumulativeData}
+          isLoading={isTimeSeriesLoading}
+          isError={isTimeSeriesError}
+          error={timeSeriesError}
+          title={`Cumulative ${chartTitle}`}
+          type="line"
+        />
+      </ChartsContainer>
     </DashboardContainer>
   );
 }; 
