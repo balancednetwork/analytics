@@ -69,8 +69,7 @@ const LoadingOverlay = styled.div`
   border-radius: 8px;
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
-
-const AVAILABLE_NETWORKS = ['Stellar', 'Sui', 'Arbitrum', 'Polygon'];
+const AVAILABLE_NETWORKS = ['Arbitrum', 'Archway', 'Avalanche', 'Base', 'BNB Chain', 'Havah', 'ICON', 'Injective', 'Optimism', 'Polygon', 'Solana', 'Stellar', 'Sui'];
 
 export const AnalyticsDashboard: React.FC = () => {
   const [startDate, setStartDate] = useState(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
