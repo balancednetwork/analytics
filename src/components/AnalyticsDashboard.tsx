@@ -24,11 +24,19 @@ const Select = styled.select`
   background-color: rgb(12, 42, 77);
   color: white;
   outline: none;
+  cursor: pointer;
 
   &:focus {
     border-color: #40E0D0;
     box-shadow: 0 0 0 1px #40E0D0;
   }
+
+  /* Style the dropdown arrow */
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%2340E0D0' opacity='0.8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  padding-right: 2rem;
 
   option {
     background-color: rgb(12, 42, 77);
@@ -38,11 +46,14 @@ const Select = styled.select`
 
 const DateInput = styled.input`
   padding: 0.5rem;
+  padding-right: 2rem;
   border-radius: 8px;
   border: 1px solid #40E0D0;
   background-color: rgb(12, 42, 77);
   color: white;
   outline: none;
+  cursor: pointer;
+  position: relative;
 
   &:focus {
     border-color: #40E0D0;
@@ -51,6 +62,95 @@ const DateInput = styled.input`
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2340E0D0'%3E%3Cpath d='M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-clear-button {
+    display: none;
+  }
+
+  /* Calendar Picker Styles */
+  &::-webkit-datetime-edit-fields-wrapper {
+    color: white;
+  }
+
+  &::-webkit-datetime-edit {
+    color: white;
+  }
+
+  &::-webkit-datetime-edit-text {
+    color: white;
+  }
+
+  &::-webkit-datetime-edit-month-field {
+    color: white;
+  }
+
+  &::-webkit-datetime-edit-day-field {
+    color: white;
+  }
+
+  &::-webkit-datetime-edit-year-field {
+    color: white;
+  }
+
+  &::-webkit-calendar-picker {
+    background-color: rgb(12, 42, 77);
+  }
+
+  &::-webkit-calendar-picker-controls {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Calendar popup styles */
+  &::-webkit-calendar-popup {
+    background-color: rgb(12, 42, 77);
+    color: white;
+    border: 1px solid #40E0D0;
+    border-radius: 8px;
+  }
+
+  &::-webkit-calendar-popup button {
+    color: white;
+    background-color: rgb(12, 42, 77);
+    border: 1px solid #40E0D0;
+  }
+
+  &::-webkit-calendar-popup button:hover {
+    background-color: #40E0D0;
+    color: rgb(12, 42, 77);
+  }
+
+  &::-webkit-calendar-popup td.selected {
+    background-color: #40E0D0;
+    color: rgb(12, 42, 77);
+  }
+
+  &::-webkit-calendar-popup td:hover {
+    background-color: rgba(64, 224, 208, 0.2);
   }
 `;
 
