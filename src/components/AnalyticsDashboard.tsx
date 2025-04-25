@@ -41,12 +41,6 @@ const StatCard = styled.div`
   border-radius: 8px;
   text-align: center;
 
-  h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: ${({ theme }) => theme.colors.text.secondary};
-  }
-
   p {
     margin: 0;
     font-size: 1.5rem;
@@ -74,6 +68,21 @@ const LoadingOverlay = styled.div`
 `;
 const AVAILABLE_NETWORKS = ['Arbitrum', 'Archway', 'Avalanche', 'Base', 'BNB Chain', 'Havah', 'ICON', 'Injective', 'Optimism', 'Polygon', 'Solana', 'Stellar', 'Sui'];
 
+const EVENT_TYPES = [
+  'liquidity_withdrawal',
+  'liquidity_deposit',
+  'savings_withdrawal',
+  'savings_deposit',
+  'collateral_withdrawal',
+  'collateral_deposit',
+  'repay',
+  'borrow',
+  'bridge',
+  'swap_intent',
+  'swap_standard'
+] as const;
+
+type EventType = typeof EVENT_TYPES[number];
 type FilterType = 'from' | 'to' | 'either';
 
 const FILTER_LABELS: Record<FilterType, string> = {
@@ -86,16 +95,17 @@ export const AnalyticsDashboard: React.FC = () => {
   const [startDate, setStartDate] = useState(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [selectedNetwork, setSelectedNetwork] = useState('Stellar');
-  const [filterType, setFilterType] = useState<FilterType>('to');
+  const [filterType, setFilterType] = useState<FilterType>('either');
+  const [selectedEvent, setSelectedEvent] = useState<EventType>('swap_standard');
 
   const statsOptions: UsePlausibleStatsOptions = useMemo(() => ({
     date_range: [startDate, endDate],
     filters: {
-      eventName: 'swap_standard',
+      eventName: selectedEvent,
       network: selectedNetwork,
       filterType
     }
-  }), [selectedNetwork, filterType, startDate, endDate]);
+  }), [selectedNetwork, filterType, startDate, endDate, selectedEvent]);
 
   const { data: stats, isLoading, error, isError } = usePlausibleStats(statsOptions);
 
@@ -119,6 +129,16 @@ export const AnalyticsDashboard: React.FC = () => {
           onChange={(e) => setEndDate(e.target.value)}
         />
         <Select
+          value={selectedEvent}
+          onChange={(e) => setSelectedEvent(e.target.value as EventType)}
+        >
+          {EVENT_TYPES.map(event => (
+            <option key={event} value={event}>
+              {event.replace(/_/g, ' ')}
+            </option>
+          ))}
+        </Select>
+        <Select
           value={selectedNetwork}
           onChange={(e) => setSelectedNetwork(e.target.value)}
         >
@@ -141,7 +161,7 @@ export const AnalyticsDashboard: React.FC = () => {
       ) : (
         <StatsContainer>
           <StatCard>
-            <h3>Swaps {FILTER_LABELS[filterType]} {selectedNetwork}</h3>
+            <h3>{selectedEvent.replace(/_/g, ' ')} {FILTER_LABELS[filterType]} on {selectedNetwork}</h3>
             <p>{metricValue ?? 0}</p>
           </StatCard>
         </StatsContainer>
