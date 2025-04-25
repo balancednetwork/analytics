@@ -2,6 +2,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import styled, { keyframes } from 'styled-components';
 import { Panel } from './StyledComponents/Panel';
 import type { TimeSeriesDataPoint } from '../hooks/usePlausibleTimeSeries';
+import { CustomTooltip } from './CustomTooltip';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -17,9 +18,13 @@ const Spinner = styled.div`
   animation: ${spin} 1s linear infinite;
 `;
 
-const ChartContainer = styled(Panel)`
-  height: 400px;
+const ChartContainer = styled(Panel).attrs({
+  elevation: 'none'
+})`
+  height: 440px;
+  width: 100%;
   margin-top: 2rem;
+  padding-bottom: 75px;
 `;
 
 const LoadingOverlay = styled.div`
@@ -48,21 +53,12 @@ interface TimeSeriesChartProps {
 }
 
 const commonChartProps = {
-  margin: { top: 20, right: 30, left: 20, bottom: 20 }
+  margin: { top: 20, right: 40, left: 40, bottom: 20 }
 };
 
 const commonAxisProps = {
   stroke: 'rgba(255, 255, 255, 0.5)',
   tick: { fill: 'rgba(255, 255, 255, 0.5)' }
-};
-
-const tooltipStyle = {
-  contentStyle: { 
-    backgroundColor: 'rgba(12, 42, 77, 0.9)',
-    border: '1px solid #40E0D0',
-    borderRadius: '8px',
-    color: '#fff !important'
-  }
 };
 
 export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
@@ -92,7 +88,7 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
   return (
     <ChartContainer>
-      <h3>{title}</h3>
+      <h3 style={{ marginBottom: '40px', fontSize: '16px' }}>{title}</h3>
       <ResponsiveContainer width="100%" height="100%">
         <ChartComponent data={data}  {...commonChartProps}>
         <defs>
@@ -107,8 +103,7 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           <YAxis 
                 axisLine={false}
                 tickLine={false} {...commonAxisProps} />
-          <Tooltip {...tooltipStyle} 
-                cursor={false} />
+          <Tooltip content={<CustomTooltip />} cursor={false} />
           <DataComponent
             type={type === 'line' ? 'monotone' : undefined}
             dataKey="value"
