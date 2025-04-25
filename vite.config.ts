@@ -13,4 +13,21 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  server: {
+    proxy: {
+      '/api/plausible': {
+        target: 'https://plausible.io/api/v2/query',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/plausible/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
+            // Forward the Authorization header
+            if (req.headers.authorization) {
+              proxyReq.setHeader('Authorization', req.headers.authorization);
+            }
+          });
+        },
+      },
+    },
+  },
 })

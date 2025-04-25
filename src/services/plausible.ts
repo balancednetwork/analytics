@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { PlausibleFilter } from '../types/plausible';
 
-const PLAUSIBLE_API_BASE = 'https://plausible.io/api/v2/query';
+const PLAUSIBLE_API_BASE = '/api/plausible';
 
 const plausibleApi = axios.create({
   baseURL: PLAUSIBLE_API_BASE,
