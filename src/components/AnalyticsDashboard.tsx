@@ -19,14 +19,39 @@ const FilterContainer = styled.div`
 
 const Select = styled.select`
   padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 8px;
+  border: 1px solid #40E0D0;
+  background-color: rgb(12, 42, 77);
+  color: white;
+  outline: none;
+
+  &:focus {
+    border-color: #40E0D0;
+    box-shadow: 0 0 0 1px #40E0D0;
+  }
+
+  option {
+    background-color: rgb(12, 42, 77);
+    color: white;
+  }
 `;
 
 const DateInput = styled.input`
   padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 8px;
+  border: 1px solid #40E0D0;
+  background-color: rgb(12, 42, 77);
+  color: white;
+  outline: none;
+
+  &:focus {
+    border-color: #40E0D0;
+    box-shadow: 0 0 0 1px #40E0D0;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
 `;
 
 const ErrorMessage = styled.div`
