@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchPlausibleStats } from '../services/plausible';
 
-interface EventFilterOptions {
+export interface EventFilterOptions {
   eventName: string;
   from?: string;
   to?: string;
 }
 
-interface UsePlausibleStatsOptions {
-  period?: string;
+export interface UsePlausibleStatsOptions {
+  date_range: string | [string, string];
   filters?: EventFilterOptions;
 }
 
-export const usePlausibleStats = (options: UsePlausibleStatsOptions = {}) => {
+export const usePlausibleStats = (options: UsePlausibleStatsOptions) => {
   return useQuery({
     queryKey: ['plausible-stats', options],
     queryFn: () => fetchPlausibleStats(options),

@@ -4,6 +4,8 @@ import { format, subDays } from 'date-fns';
 import styled from 'styled-components';
 import { Panel } from './StyledComponents/Panel';
 import { usePlausibleStats } from '../hooks/usePlausibleStats';
+import type { UsePlausibleStatsOptions } from '../hooks/usePlausibleStats';
+import { extractMetricValue } from '../utils/plausible';
 
 const DashboardContainer = styled(Panel)``;
 
@@ -11,6 +13,7 @@ const FilterContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 `;
 
 const Select = styled.select`
@@ -37,12 +40,6 @@ const StatCard = styled.div`
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
-
-  h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: ${({ theme }) => theme.colors.text.secondary};
-  }
 
   p {
     margin: 0;
@@ -77,19 +74,21 @@ export const AnalyticsDashboard: React.FC = () => {
   const [selectedNetwork, setSelectedNetwork] = useState('Stellar');
   const [filterType, setFilterType] = useState<'from' | 'to'>('to');
 
-  const statsOptions = useMemo(() => ({
-    period: '30d',
+  const statsOptions: UsePlausibleStatsOptions = useMemo(() => ({
+    date_range: [startDate, endDate],
     filters: {
       eventName: 'swap_standard',
       [filterType]: selectedNetwork
     }
-  }), [selectedNetwork, filterType]);
+  }), [selectedNetwork, filterType, startDate, endDate]);
 
   const { data: stats, isLoading, error, isError } = usePlausibleStats(statsOptions);
 
   if (isError && error instanceof Error) {
     return <ErrorMessage>Error loading stats: {error.message}</ErrorMessage>;
   }
+
+  const metricValue = extractMetricValue(stats);
 
   return (
     <DashboardContainer padding="large">
@@ -116,8 +115,8 @@ export const AnalyticsDashboard: React.FC = () => {
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as 'from' | 'to')}
         >
-          <option value="to">To Network</option>
-          <option value="from">From Network</option>
+          <option value="to">as destination</option>
+          <option value="from">as origin</option>
         </Select>
       </FilterContainer>
 
@@ -127,7 +126,7 @@ export const AnalyticsDashboard: React.FC = () => {
         <StatsContainer>
           <StatCard>
             <h3>Swaps {filterType === 'to' ? 'to' : 'from'} {selectedNetwork}</h3>
-            <p>{stats?.results[0]?.value || 0}</p>
+            <p>{metricValue ?? 0}</p>
           </StatCard>
         </StatsContainer>
       )}

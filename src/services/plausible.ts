@@ -19,17 +19,17 @@ interface EventFilterOptions {
 
 export const fetchPlausibleStats = async (
   options: {
-    period?: string;
+    date_range: string | [string, string];
     filters?: EventFilterOptions;
-  } = {}
+  }
 ) => {
-  const { period = '30d', filters } = options;
+  const { date_range, filters } = options;
 
   try {
     const queryParams = {
       site_id: import.meta.env.VITE_PLAUSIBLE_SITE_ID,
       metrics: ['events'],
-      date_range: period,
+      date_range: Array.isArray(date_range) ? date_range : date_range,
       filters: [] as PlausibleFilter[]
     };
 
