@@ -15,6 +15,7 @@ const FilterContainer = styled.div`
   gap: 1rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const Select = styled.select`
