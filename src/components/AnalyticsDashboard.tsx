@@ -1,25 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format, subDays } from 'date-fns';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
-import axios from 'axios';
 import { Panel } from './StyledComponents/Panel';
+import { usePlausibleStats } from '../hooks/usePlausibleStats';
 
-interface EventData {
-  date: string;
-  visitors: number;
-  pageviews: number;
-  bounce_rate: number;
-}
-
-interface AnalyticsDashboardProps {
-  siteId: string;
-  apiKey: string;
-}
-
-const DashboardContainer = styled(Panel)`
-  
-`;
+const DashboardContainer = styled(Panel)``;
 
 const FilterContainer = styled.div`
   display: flex;
@@ -39,55 +25,72 @@ const DateInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.background.secondary};
 `;
 
-const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.colors.error};
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(255, 59, 48, 0.1);
-  border-radius: 4px;
+const StatsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
 `;
 
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ siteId, apiKey }) => {
+const StatCard = styled.div`
+  background: ${({ theme }) => theme.colors.background.secondary};
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.text.secondary};
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+`;
+
+const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.colors.error};
+  padding: 1rem;
+  text-align: center;
+  background: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 8px;
+`;
+
+const LoadingOverlay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const AVAILABLE_NETWORKS = ['Stellar', 'Sui', 'Arbitrum', 'Polygon'];
+
+export const AnalyticsDashboard: React.FC = () => {
   const [startDate, setStartDate] = useState(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [eventName, setEventName] = useState('');
-  const [eventData, setEventData] = useState<EventData[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState('Stellar');
+  const [filterType, setFilterType] = useState<'from' | 'to'>('to');
 
-  const fetchAnalytics = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get('https://plausible.io/api/stats/aggregate', {
-        params: {
-          site_id: siteId,
-          period: 'custom',
-          date: `${startDate},${endDate}`,
-          metrics: 'visitors,pageviews,bounce_rate',
-          filters: eventName ? `event:name==${eventName}` : undefined,
-        },
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      });
-      
-      if (response.data.results) {
-        setEventData(response.data.results);
-      } else {
-        setError('No data available for the selected period');
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError(error.response?.data?.error || 'Failed to fetch analytics data');
-      } else {
-        setError('An unexpected error occurred');
-      }
-      console.error('Error fetching analytics:', error);
-    } finally {
-      setLoading(false);
+  const statsOptions = useMemo(() => ({
+    period: '30d',
+    filters: {
+      eventName: 'swap_standard',
+      [filterType]: selectedNetwork
     }
-  };
+  }), [selectedNetwork, filterType]);
+
+  const { data: stats, isLoading, error, isError } = usePlausibleStats(statsOptions);
+
+  if (isError && error instanceof Error) {
+    return <ErrorMessage>Error loading stats: {error.message}</ErrorMessage>;
+  }
 
   return (
     <DashboardContainer padding="large">
@@ -103,33 +106,34 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ siteId, 
           onChange={(e) => setEndDate(e.target.value)}
         />
         <Select
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
+          value={selectedNetwork}
+          onChange={(e) => setSelectedNetwork(e.target.value)}
         >
-          <option value="">All Events</option>
-          {/* Add your custom events here */}
+          {AVAILABLE_NETWORKS.map(network => (
+            <option key={network} value={network}>{network}</option>
+          ))}
         </Select>
-        <button type="button" onClick={fetchAnalytics} disabled={loading}>
-          {loading ? 'Loading...' : 'Fetch Data'}
-        </button>
+        <Select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value as 'from' | 'to')}
+        >
+          <option value="to">To Network</option>
+          <option value="from">From Network</option>
+        </Select>
       </FilterContainer>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-
-      {eventData.length > 0 && (
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={eventData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="visitors" stroke="#8884d8" name="Visitors" />
-            <Line type="monotone" dataKey="pageviews" stroke="#82ca9d" name="Pageviews" />
-            <Line type="monotone" dataKey="bounce_rate" stroke="#ffc658" name="Bounce Rate" />
-          </LineChart>
-        </ResponsiveContainer>
+      {isLoading ? (
+        <LoadingOverlay>Loading stats...</LoadingOverlay>
+      ) : (
+        <StatsContainer>
+          <StatCard>
+            <h3>Swaps {filterType === 'to' ? 'to' : 'from'} {selectedNetwork}</h3>
+            <p>{stats?.results[0]?.value || 0}</p>
+          </StatCard>
+        </StatsContainer>
       )}
+
+      {/* Chart component commented out for now */}
     </DashboardContainer>
   );
 }; 
