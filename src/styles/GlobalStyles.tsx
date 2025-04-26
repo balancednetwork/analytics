@@ -4,8 +4,8 @@ import { theme } from './theme';
 export const GlobalStyles = createGlobalStyle`
   @font-face {
     font-family: 'TeX Gyre Adventor';
-    src: url('/src/assets/font/tex-gyre-adventor-regular/tex-gyre-adventor-regular.woff2') format('woff2'),
-         url('/src/assets/font/tex-gyre-adventor-regular/tex-gyre-adventor-regular.woff') format('woff');
+    src: url('/fonts/tex-gyre-adventor-regular/tex-gyre-adventor-regular.woff2') format('woff2'),
+         url('/fonts/tex-gyre-adventor-regular/tex-gyre-adventor-regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -13,8 +13,8 @@ export const GlobalStyles = createGlobalStyle`
 
   @font-face {
     font-family: 'TeX Gyre Adventor';
-    src: url('/src/assets/font/tex-gyre-adventor-bold/tex-gyre-adventor-bold.woff2') format('woff2'),
-         url('/src/assets/font/tex-gyre-adventor-bold/tex-gyre-adventor-bold.woff') format('woff');
+    src: url('/fonts/tex-gyre-adventor-bold/tex-gyre-adventor-bold.woff2') format('woff2'),
+         url('/fonts/tex-gyre-adventor-bold/tex-gyre-adventor-bold.woff') format('woff');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
