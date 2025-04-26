@@ -21,7 +21,7 @@ function App() {
         <GlobalStyles />
         <main>
           <Header />
-          <h1>Transaction analytics</h1>
+          <h1>Stellar analytics</h1>
         <AnalyticsDashboard />
         </main>
       </ThemeProvider>
