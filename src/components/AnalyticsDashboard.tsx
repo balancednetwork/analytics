@@ -191,7 +191,8 @@ const EVENT_TYPES = [
   'borrow',
   'bridge',
   'swap_intent',
-  'swap_standard'
+  'swap_standard',
+  'wallet_connected',
 ] as const;
 
 type EventType = typeof EVENT_TYPES[number];
