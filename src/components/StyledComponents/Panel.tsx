@@ -31,6 +31,19 @@ const StyledPanel = styled.div<{ $padding: string; $elevation: string }>`
         return 'none';
     }
   }};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding: ${({ $padding, theme }) => {
+      switch ($padding) {
+        case 'small':
+          return theme.spacing.xs;
+        case 'large':
+          return theme.spacing.md;
+        default:
+          return theme.spacing.sm;
+      }
+    }};
+  }
 `;
 
 export const Panel = ({ 

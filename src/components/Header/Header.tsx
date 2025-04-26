@@ -47,7 +47,6 @@ export const Header = () => {
       </Logo>
       
       <Nav>
-        <NavLink target="_blank" to="https://balanced.network/how/">How-to</NavLink>
         <NavLink target="_blank" to="https://balanced.network/demo/">Demo</NavLink>
         <NavLink target="_blank" to="https://app.balanced.network/">App</NavLink>
       </Nav>

@@ -25,6 +25,11 @@ const ChartContainer = styled(Panel).attrs({
   width: 100%;
   margin-top: 2rem;
   padding-bottom: 75px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    height: 300px;
+    padding-bottom: 50px;
+  }
 `;
 
 const LoadingOverlay = styled.div`

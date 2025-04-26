@@ -58,6 +58,12 @@ export const GlobalStyles = createGlobalStyle`
     margin-top: ${theme.spacing.xl};
     margin-bottom: ${theme.spacing.xl};
     font-size: ${theme.typography.fontSize.h1};
+
+    @media (max-width: ${theme.breakpoints.tablet}) {
+    margin-top: ${theme.spacing.md};
+    margin-bottom: ${theme.spacing.md};
+      font-size: 30px;
+    }
   }
 
   h2 {
