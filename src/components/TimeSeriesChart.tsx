@@ -50,6 +50,7 @@ interface TimeSeriesChartProps {
   error?: Error;
   title: string;
   type?: ChartType;
+  eventType?: string;
 }
 
 const commonChartProps = {
@@ -67,7 +68,8 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   isError,
   error,
   title,
-  type = 'line'
+  type = 'line',
+  eventType
 }) => {
   if (isError && error instanceof Error) {
     return <ErrorMessage>Error loading chart data: {error.message}</ErrorMessage>;
@@ -91,7 +93,7 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       <h3 style={{ marginBottom: '40px', fontSize: '16px', textAlign: 'center' }}>{title}</h3>
       <ResponsiveContainer width="100%" height="100%">
         <ChartComponent data={data}  {...commonChartProps}>
-        <defs>
+          <defs>
             <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={'#40E0D0'} stopOpacity={0.5} />
               <stop offset="100%" stopColor={'#40E0D0'} stopOpacity={0} />
@@ -103,7 +105,7 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           <YAxis 
                 axisLine={false}
                 tickLine={false} {...commonAxisProps} />
-          <Tooltip content={<CustomTooltip />} cursor={false} />
+          <Tooltip content={<CustomTooltip eventType={eventType} />} cursor={false} />
           <DataComponent
             type={type === 'line' ? 'monotone' : undefined}
             dataKey="value"

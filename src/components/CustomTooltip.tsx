@@ -19,10 +19,16 @@ const TooltipValue = styled.div`
   color: rgba(255, 255, 255, 1);
 `;
 
-export const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload }) => {
+interface CustomTooltipProps extends TooltipProps<number, string> {
+  eventType?: string;
+}
+
+export const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, eventType }) => {
   if (!active || !payload || !payload.length) {
     return null;
   }
+
+  const label = eventType === 'wallet_connected' ? 'Connections' : 'Transactions';
 
   return (
     <TooltipContainer>
@@ -30,7 +36,7 @@ export const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, 
         {payload[0].payload.date}
       </TooltipDate>
       <TooltipValue>
-        Transactions: <strong>{payload[0].value}</strong>
+        {label}: <strong>{payload[0].value}</strong>
       </TooltipValue>
     </TooltipContainer>
   );

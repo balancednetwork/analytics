@@ -279,6 +279,7 @@ export const AnalyticsDashboard: React.FC = () => {
           error={timeSeriesError}
           title={`Daily ${chartTitle}`}
           type="bar"
+          eventType={selectedEvent}
         />
 
         <TimeSeriesChart
@@ -288,6 +289,7 @@ export const AnalyticsDashboard: React.FC = () => {
           error={timeSeriesError}
           title={`Cumulative ${chartTitle}`}
           type="line"
+          eventType={selectedEvent}
         />
       </ChartsContainer>
     </DashboardContainer>
